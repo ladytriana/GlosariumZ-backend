@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\IstilahController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\IstilahController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,17 @@ use App\Http\Controllers\IstilahController;
 |
 */
 
-Route::prefix('istilah')->group(function () {
-    Route::get('/{id}', [IstilahController::class, 'show']);
-    Route::post('/', [IstilahController::class, 'store']);
-    Route::delete('/{id}', [IstilahController::class, 'destroy']);
-    Route::put('/{id}', [IstilahController::class, 'update']);
+// Admin Authentication
+Route::post('/admin/register', [AdminAuthController::class, 'register']);
+Route::post('/admin/login', [AdminAuthController::class, 'login']);
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware('auth:sanctum');
+
+// Protected Istilah Routes (Only for Admins)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/istilah', [IstilahController::class, 'store']);
+    Route::delete('/istilah/{id}', [IstilahController::class, 'destroy']);
+    Route::put('/istilah/{id}', [IstilahController::class, 'update']);
 });
+
+// Public Istilah Route (View only)
+Route::get('/istilah/{id}', [IstilahController::class, 'show']);
