@@ -8,6 +8,13 @@ use Illuminate\Support\Str;
 
 class IstilahController extends Controller
 {
+    // GET /istilah - Public (All Istilah)
+    public function index()
+    {
+        $istilah = Istilah::all();
+        return response()->json($istilah);
+    }
+
     // GET /istilah/{id} - Public
     public function show($id)
     {

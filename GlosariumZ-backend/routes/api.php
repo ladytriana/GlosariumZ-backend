@@ -28,5 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/istilah/{id}', [IstilahController::class, 'update']);
 });
 
-// Public Istilah Route (View only)
+// Public Istilah Routes (View only)
+Route::get('/istilah', [IstilahController::class, 'index']); // New route to get all istilah
 Route::get('/istilah/{id}', [IstilahController::class, 'show']);

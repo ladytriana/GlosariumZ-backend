@@ -2,28 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
-
     protected $table = 'admin';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
+        'id',
         'username',
         'password',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public $incrementing = false; // Disable auto-incrementing since we use UUIDs
+    protected $keyType = 'string'; // Set the key type to string
+
+    // Automatically generate a UUID when creating a new Admin
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
 }
