@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IstilahController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('istilah')->group(function () {
+    Route::get('/{id}', [IstilahController::class, 'show']);
+    Route::post('/', [IstilahController::class, 'store']);
+    Route::delete('/{id}', [IstilahController::class, 'destroy']);
+    Route::put('/{id}', [IstilahController::class, 'update']);
 });
